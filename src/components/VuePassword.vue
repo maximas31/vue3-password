@@ -6,7 +6,7 @@
         :strength="this.strength"
         :type="type"
         :updatePassword="updatePassword"
-        :value="value"
+        :value="modelValue"
       >
         <input
           ref="input"
@@ -16,9 +16,8 @@
             { 'VuePassword__Input--has-toggle': !disableToggle }
           ]"
           :title="strengthMessage"
-          :value="value"
-          v-bind="$attrs"
-          v-on="listeners"
+          :value="modelValue"
+          v-bind="attrs"
         />
       </slot>
       <slot
@@ -131,7 +130,7 @@ export default {
         ];
       }
     },
-    value: String
+    modelValue: String
   },
   computed: {
     inputElement() {
@@ -143,19 +142,15 @@ export default {
       }
       return null;
     },
-    listeners() {
-      return Object.assign(
-        {},
-        this.$listeners,
-        { input: this.updatePassword }
-      );
+    attrs() {
+      return Object.assign({}, this.$attrs, { onInput: this.updatePassword });
     },
     model: {
       get() {
-        return this.value;
+        return this.modelValue;
       },
       set(value) {
-        this.$emit("input", value);
+        this.$emit("update:modelValue", value);
       }
     },
     strengthClass() {
